@@ -5,7 +5,12 @@
 #include "Win32Project4.h"
 
 #define MAX_LOADSTRING 100
-
+HWND Abutton;
+HWND Bbutton;
+HWND Cbutton;
+HWND Dbutton;
+HWND Ebutton;
+HWND Fbutton;
 // Global Variables:
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
@@ -100,7 +105,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+	   30, 70, 500, 300, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
@@ -131,6 +136,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+	case WM_CREATE:
+	{
+	Abutton = CreateWindowEx(0, L"BUTTON", L"100%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	Bbutton = CreateWindowEx(0, L"BUTTON", L"80%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		90, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	Cbutton = CreateWindowEx(0, L"BUTTON", L"60%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		170, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	Dbutton = CreateWindowEx(0, L"BUTTON", L"40%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		250, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	Ebutton = CreateWindowEx(0, L"BUTTON", L"20%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		330, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	Fbutton = CreateWindowEx(0, L"BUTTON", L"0%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		410, 100, 70, 70, hWnd, NULL, NULL, NULL);
+	
+	}
+		break;
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
