@@ -13,6 +13,7 @@
 #define IDI_WIN32PROJECT4			107
 #define IDI_SMALL				108
 #define IDC_WIN32PROJECT4			109
+#define IDD_DIALOG1                     129
 #define IDC_MYICON				2
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1

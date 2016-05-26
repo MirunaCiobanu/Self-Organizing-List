@@ -1,26 +1,37 @@
 // Win32Project4.cpp : Defines the entry point for the application.
 //
 
+//#include "stdio.h"
 #include "stdafx.h"
 #include "Win32Project4.h"
+#include "SelfOrganizedList.h"
 
 #define MAX_LOADSTRING 100
+#define PROCESS_CASE 0x12f3
+
+HWND zonaCuIntrebari;
 HWND Abutton;
 HWND Bbutton;
 HWND Cbutton;
 HWND Dbutton;
 HWND Ebutton;
 HWND Fbutton;
+
+
+
 // Global Variables:
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
- 
+
+FILE *file;
+
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK	Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -30,6 +41,16 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
+	// initializam lista cu cele 6 raspunsuri:
+	InsertFirst(A_INDEX);
+	InsertLast(B_INDEX);
+	InsertLast(C_INDEX);
+	InsertLast(D_INDEX);
+	InsertLast(E_INDEX);
+	InsertLast(F_INDEX);
+
+	fopen_s(&file, "intrebari.txt", "r");
+
  	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
@@ -38,6 +59,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_WIN32PROJECT4, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
+
+	
 
 	// Perform application initialization:
 	if (!InitInstance (hInstance, nCmdShow))
@@ -105,7 +128,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-	   30, 70, 500, 300, NULL, NULL, hInstance, NULL);
+	   CW_USEDEFAULT, 0, 510, 500, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
@@ -138,6 +161,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
+					  zonaCuIntrebari = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_VISIBLE | WS_CHILD | ES_CENTER | ES_MULTILINE,
+						  10, 10, 470, 80, hWnd, NULL, NULL, NULL);
 	Abutton = CreateWindowEx(0, L"BUTTON", L"100%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 100, 70, 70, hWnd, NULL, NULL, NULL);
 	Bbutton = CreateWindowEx(0, L"BUTTON", L"80%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
@@ -151,6 +176,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	Fbutton = CreateWindowEx(0, L"BUTTON", L"0%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		410, 100, 70, 70, hWnd, NULL, NULL, NULL);
 	
+	SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
 	}
 		break;
 	case WM_COMMAND:
@@ -159,6 +185,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Parse the menu selections:
 		switch (wmId)
 		{
+		case BN_CLICKED:
+			// cazul apasarii pe butoane:
+			
+			if (Abutton == (HWND)lParam) {
+				UseNode(A_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			if (Bbutton == (HWND)lParam) {
+				UseNode(B_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			if (Cbutton == (HWND)lParam) {
+				UseNode(C_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			if (Dbutton == (HWND)lParam) {
+				UseNode(D_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			if (Ebutton == (HWND)lParam) {
+				UseNode(E_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			if (Fbutton == (HWND)lParam) {
+				UseNode(F_INDEX);
+				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+				break;
+			}
+			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -168,6 +228,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
+		break;
+	case PROCESS_CASE:
+	{
+						 // Am adaugat un caz la procesarea mesajului, un caz particular definit de mine, o sa iti explic eu ce inseamna
+						 LPWSTR buffer = (LPWSTR)malloc(sizeof(WCHAR)* MAX_PATH);
+						 fgetws(buffer, MAX_PATH, file);
+						 if (feof(file)) {
+							 DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Raspuns);
+						 }
+						 else {
+							 SetWindowText(zonaCuIntrebari, buffer);
+						 }
+						 free(buffer);
+	}
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
@@ -185,6 +259,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 // Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message)

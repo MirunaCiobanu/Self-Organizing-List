@@ -16,6 +16,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="C:\Users\Miruna\Desktop\Win32-SelfOrganizedList\Win32-SelfOrganizedList\Win32-SelfOrganizedList\intrebari.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,6 +31,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Win32Project4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Miruna\Desktop\Win32-SelfOrganizedList\Win32-SelfOrganizedList\Win32-SelfOrganizedList\SelfOrganizedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
