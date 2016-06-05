@@ -19,6 +19,9 @@
     <Text Include="C:\Users\Miruna\Desktop\Win32-SelfOrganizedList\Win32-SelfOrganizedList\Win32-SelfOrganizedList\intrebari.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="C:\Users\Miruna\Desktop\Win32-SelfOrganizedList\Win32-SelfOrganizedList\Win32-SelfOrganizedList\raspunsuri.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

@@ -16,7 +16,7 @@ HWND Cbutton;
 HWND Dbutton;
 HWND Ebutton;
 HWND Fbutton;
-
+HWND butonDeOprire;
 
 
 // Global Variables:
@@ -52,8 +52,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	fopen_s(&file, "intrebari.txt", "r");
 
  	// TODO: Place code here.
-	MSG msg;
-	HACCEL hAccelTable;
+	
 
 	// Initialize global strings
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -67,7 +66,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	{
 		return FALSE;
 	}
-
+MSG msg;
+	HACCEL hAccelTable;
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WIN32PROJECT4));
 
 	// Main message loop:
@@ -161,8 +161,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-					  zonaCuIntrebari = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_VISIBLE | WS_CHILD | ES_CENTER | ES_MULTILINE,
-						  10, 10, 470, 80, hWnd, NULL, NULL, NULL);
+	  butonDeOprire = CreateWindowEx(0, L"BUTTON", L"M-am plictisit. Vreau sa aflu rezultatul!",
+		  WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+		  10, 180, 470, 30, hWnd, NULL, NULL, NULL);
+	zonaCuIntrebari = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_VISIBLE | WS_CHILD | ES_CENTER | ES_MULTILINE,
+	    10, 10, 470, 80, hWnd, NULL, NULL, NULL);
 	Abutton = CreateWindowEx(0, L"BUTTON", L"100%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 100, 70, 70, hWnd, NULL, NULL, NULL);
 	Bbutton = CreateWindowEx(0, L"BUTTON", L"80%", WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
@@ -187,7 +190,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case BN_CLICKED:
 			// cazul apasarii pe butoane:
-			
+			if (butonDeOprire == (HWND)lParam) {
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Raspuns);
+				break;
+			}
 			if (Abutton == (HWND)lParam) {
 				UseNode(A_INDEX);
 				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
@@ -231,11 +237,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case PROCESS_CASE:
 	{
-						 // Am adaugat un caz la procesarea mesajului, un caz particular definit de mine, o sa iti explic eu ce inseamna
 						 LPWSTR buffer = (LPWSTR)malloc(sizeof(WCHAR)* MAX_PATH);
 						 fgetws(buffer, MAX_PATH, file);
 						 if (feof(file)) {
-							 DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Raspuns);
+							 DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, Raspuns);
 						 }
 						 else {
 							 SetWindowText(zonaCuIntrebari, buffer);
@@ -283,8 +288,27 @@ INT_PTR CALLBACK Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_INITDIALOG:
+	{	 // am adaugat aici la initializare:
+		 int raspuns;
+		 // am calculat raspunsul : media aritmetica ponderata
+		 raspuns = (0.2 * first->index) + (0.3 * first->next->index) + (0.2 * first->next->next->index) + (0.1 * first->next->next->next->index) + (0.1 * first->next->next->next->next->index);
+		fclose(file);
+		fopen_s(&file, "raspunsuri.txt", "r");
+		LPWSTR buffer = (LPWSTR)malloc(sizeof(WCHAR)* MAX_PATH * 10);
+		while (raspuns--)
+		{
+			fgetws(buffer, MAX_PATH * 10, file);
+			
+		}
+		HWND zonaCuRaspuns = GetDlgItem(hDlg, IDC_EDIT1);
+		SetWindowText(zonaCuRaspuns, buffer);
+		fclose(file);
+		Initialize();
+		SetWindowText(zonaCuIntrebari, L"");
+		fopen_s(&file, "intrebari.txt", "r");
 		return (INT_PTR)TRUE;
-
+	}
+	
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
