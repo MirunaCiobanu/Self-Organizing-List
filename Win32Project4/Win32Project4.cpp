@@ -289,6 +289,7 @@ INT_PTR CALLBACK Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 	{	 // am adaugat aici la initializare:
+		SendDlgItemMessage(hDlg, IDC_EDIT1, EM_SETMARGINS, EC_LEFTMARGIN, MAKELPARAM(EC_USEFONTINFO, 147));
 		 int raspuns;
 		 // am calculat raspunsul : media aritmetica ponderata
 		 raspuns = (0.2 * first->index) + (0.3 * first->next->index) + (0.2 * first->next->next->index) + (0.1 * first->next->next->next->index) + (0.1 * first->next->next->next->next->index);
