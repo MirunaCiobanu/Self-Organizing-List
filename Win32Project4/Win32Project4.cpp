@@ -33,6 +33,19 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
+
+void ResetList()
+{
+	node *p;
+	p = first;
+	while (p)
+	{
+		p->frequency = 0;
+		p = p->next;
+	}
+
+}
+
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPTSTR    lpCmdLine,
@@ -83,13 +96,6 @@ MSG msg;
 	return (int) msg.wParam;
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
@@ -111,16 +117,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    HWND hWnd;
@@ -141,16 +137,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE:  Processes messages for the main window.
-//
-//  WM_COMMAND	- process the application menu
-//  WM_PAINT	- Paint the main window
-//  WM_DESTROY	- post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
@@ -180,6 +166,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		410, 100, 70, 70, hWnd, NULL, NULL, NULL);
 	
 	SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
+
 	}
 		break;
 	case WM_COMMAND:
@@ -224,6 +211,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				SendMessage(hWnd, PROCESS_CASE, wParam, lParam);
 				break;
 			}
+			break;
+		case ID_FILE_RESET:
+			ResetList();
+			fseek(file, 0, SEEK_SET);
+			SetWindowText(zonaCuIntrebari, NULL);
 			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
@@ -292,7 +284,7 @@ INT_PTR CALLBACK Raspuns(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		SendDlgItemMessage(hDlg, IDC_EDIT1, EM_SETMARGINS, EC_LEFTMARGIN, MAKELPARAM(EC_USEFONTINFO, 147));
 		 int raspuns;
 		 // am calculat raspunsul : media aritmetica ponderata
-		 raspuns = (0.2 * first->index) + (0.3 * first->next->index) + (0.2 * first->next->next->index) + (0.1 * first->next->next->next->index) + (0.1 * first->next->next->next->next->index);
+		 raspuns = (0.6 * first->index) + (0.3 * first->next->index) + (0.1 * first->next->next->index);
 		fclose(file);
 		fopen_s(&file, "raspunsuri.txt", "r");
 		LPWSTR buffer = (LPWSTR)malloc(sizeof(WCHAR)* MAX_PATH * 10);
